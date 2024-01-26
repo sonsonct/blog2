@@ -11,7 +11,12 @@ export class RolesService {
     ) { }
 
     async getAllRoles() {
-        const roles = await this.rolesRepository.find();
-        return roles;
+        try {
+            const roles = await this.rolesRepository.find();
+            return roles;
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 }

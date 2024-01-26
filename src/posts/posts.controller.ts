@@ -35,4 +35,9 @@ export class PostsController {
     getAuthor(@Param("id") id: number) {
         return this.postsService.findUserByPostId(id);
     }
+
+    @Post("/title")
+    getPostsByTitle(@Body() dataSearch: string) {
+        return this.postsService.findPostsByTitle(dataSearch);
+    }
 }
