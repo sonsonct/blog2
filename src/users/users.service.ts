@@ -13,17 +13,27 @@ export class UsersService {
         private AuthService: AuthService
     ) { }
     async getAllUsers() {
-        const users = await this.usersRepository.find();
-        return users;
+        try {
+            const users = await this.usersRepository.find();
+            return users;
+        } catch (error) {
+            console.log(error);
+        }
+
     }
     async getById(id: number) {
-        const users = await this.usersRepository.findOneBy({ id });
-        if (users == null) {
-            return {
-                "error": "User not found",
+        try {
+            const users = await this.usersRepository.findOneBy({ id });
+            if (users == null) {
+                return {
+                    "error": "User not found",
+                }
             }
+            return users;
+        } catch (error) {
+            console.log(error);
         }
-        return users;
+
     }
     async deleteUser(id: number) {
         try {
@@ -72,17 +82,22 @@ export class UsersService {
     }
 
     async findRolesByUserId(id: number) {
-        const user = await this.usersRepository.createQueryBuilder('user')
-            .leftJoinAndSelect('user.role', 'role')
-            .where('user.id = :id', { id })
-            .getOne();
+        try {
+            const user = await this.usersRepository.createQueryBuilder('user')
+                .leftJoinAndSelect('user.role', 'role')
+                .where('user.id = :id', { id })
+                .getOne();
 
-        if (user) {
-            return user;
+            if (user) {
+                return user;
+            }
+            return {
+                "error": "User not found",
+            }
+        } catch (error) {
+            console.log(error);
         }
-        return {
-            "error": "User not found",
-        }
+
 
     }
 }
