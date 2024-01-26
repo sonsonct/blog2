@@ -28,18 +28,17 @@ export class PostsService {
             return {
                 "error": "post not found",
             }
-        } else {
-            post.Title = postData.Title;
-            post.Meta_Title = postData.Meta_Title;
-            post.Slug = postData.Slug;
-            post.Summary = postData.Summary;
-            post.Published = postData.Published;
-            post.Content = postData.Content;
-            this.postRepository.save(post);
-            return {
-                "success": "updated successfully",
-            };
         }
+        post.title = postData.title;
+        post.metaTitle = postData.metaTitle;
+        post.slug = postData.slug;
+        post.summary = postData.summary;
+        post.published = postData.published;
+        post.content = postData.content;
+        this.postRepository.save(post);
+        return {
+            "success": "updated successfully",
+        };
     }
 
     async deletePost(id: number) {
@@ -49,12 +48,11 @@ export class PostsService {
             return {
                 "error": "post not found",
             }
-        } else {
-            this.postRepository.remove(post);
-            return {
-                "success": "delete successfully",
-            };
         }
+        this.postRepository.remove(post);
+        return {
+            "success": "delete successfully",
+        };
     }
 
 
@@ -68,9 +66,8 @@ export class PostsService {
             return {
                 "error": "post not found",
             }
-        } else {
-            return data;
         }
+        return data;
     }
 
 

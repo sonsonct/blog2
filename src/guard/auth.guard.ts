@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException();
         }
         try {
-            console.log(token);
+            //console.log("guard: ", token);
             const payload = await this.jwtService.verifyAsync(
                 token,
                 {
@@ -36,14 +36,15 @@ export class AuthGuard implements CanActivate {
             request['user'] = payload;
             const user = await this.usersService.findRolesByUserId(payload.sub);
             console.log(user['role'].id);
-            if (user['role'].Name_role == "admin") {
+            if (user['role'].nameRole == "user") {
                 return true;
             } else {
-                return false;
+                throw new UnauthorizedException("role no admin");
+
             }
 
         } catch {
-            throw new UnauthorizedException("role no admin");
+            throw new UnauthorizedException("not authorized");
         }
 
     }

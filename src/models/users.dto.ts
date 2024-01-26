@@ -3,37 +3,37 @@ import { IsEmail, IsString, MinLength, MaxLength, IsDate } from 'class-validator
 export class LoginDTO {
     @IsEmail()
     @MinLength(4)
-    Email: string;
+    email: string;
 
     @IsString()
     @MinLength(4)
-    Password_Hash: string;
+    passwordHash: string;
 }
 
 export class RegisterDTO extends LoginDTO {
     @IsString()
-    First_Name: string;
+    firstName: string;
 
     @IsString()
-    Middle_Name: string;
+    middleName: string;
 
     @IsString()
-    Last_Name: string;
+    lastName: string;
 
     @IsString()
     @MinLength(10)
     @MaxLength(10)
-    Mobile: string;
+    mobile: string;
 
     @IsDate()
-    Registered_At: Date;
+    registeredAt: Date;
 
     @IsDate()
-    Last_Login: string;
+    lastLogin: string;
 
     @IsString()
-    Intro: string;
+    intro: string;
 
     @IsString()
-    Profile: string;
+    profile: string;
 }

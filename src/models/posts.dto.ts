@@ -2,26 +2,26 @@ import { IsBoolean, IsNumber, IsString } from "class-validator"
 
 export class PostDTO {
     @IsNumber()
-    Author_Id: number;
+    authorId: number;
 
     @IsNumber()
-    Parent_Id: number;
+    parentId: number;
 
     @IsString()
-    Title: string;
+    title: string;
 
     @IsString()
-    Meta_Title: string;
+    metaTitle: string;
 
     @IsString()
-    Slug: string;
+    slug: string;
 
     @IsString()
-    Summary: string;
+    summary: string;
 
     @IsBoolean()
-    Published: boolean;
+    published: boolean;
 
     @IsString()
-    Content: string;
+    content: string;
 }

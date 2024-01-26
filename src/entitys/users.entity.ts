@@ -8,42 +8,42 @@ export class Users {
     id: number;
 
     @Column({ nullable: false, type: 'varchar', length: 255 })
-    First_Name: string;
+    firstName: string;
 
     @Column({ nullable: false, type: 'varchar', length: 255 })
-    Middle_Name: string;
+    middleName: string;
 
     @Column({ nullable: false, type: 'varchar', length: 255 })
-    Last_Name: string;
+    lastName: string;
 
     @Column({ nullable: false, type: 'varchar', length: 20, unique: true })
-    Mobile: string;
+    mobile: string;
 
     @Column({ nullable: false, type: 'varchar', length: 255, unique: true })
-    Email: string;
+    email: string;
 
     @Column({ nullable: false, type: 'varchar', length: 255 })
-    Password_Hash: string;
+    passwordHash: string;
 
     @CreateDateColumn({ type: 'timestamp' })
-    Registered_At: Date;
+    registeredAt: Date;
 
     @CreateDateColumn({ type: 'timestamp' })
-    Last_Login: Date;
+    lastLogin: Date;
 
     @Column({ nullable: false, type: 'text' })
-    Intro: string;
+    intro: string;
 
     @Column({ nullable: false, type: 'text' })
-    Profile: string;
+    profile: string;
 
     @Column({ nullable: false, default: 3 })
-    role_id: number;
+    roleId: number;
 
     @OneToMany(() => Posts, (post) => post.user)
     post: Posts[]
 
     @ManyToOne(() => Roles, role => role.user)
-    @JoinColumn({ name: 'role_id' })
+    @JoinColumn({ name: 'roleId' })
     role: Roles;
 }

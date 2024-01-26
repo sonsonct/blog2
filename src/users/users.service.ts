@@ -1,3 +1,4 @@
+import { AuthService } from './../auth/auth.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/entitys/users.entity';
@@ -8,8 +9,8 @@ import { Repository } from 'typeorm';
 export class UsersService {
     constructor(
         @InjectRepository(Users)
-        private usersRepository: Repository<Users>
-
+        private usersRepository: Repository<Users>,
+        private AuthService: AuthService
     ) { }
     async getAllUsers() {
         const users = await this.usersRepository.find();
@@ -31,11 +32,10 @@ export class UsersService {
                 return {
                     "error": "User not found",
                 }
-            } else {
-                await this.usersRepository.remove(users);
-                return {
-                    "sucess": "ok",
-                }
+            }
+            await this.usersRepository.remove(users);
+            return {
+                "sucess": "ok",
             }
 
         } catch (error) {
@@ -51,21 +51,20 @@ export class UsersService {
                 return {
                     "error": "User not found",
                 }
-            } else {
-                users.First_Name = dataUser.First_Name;
-                users.Middle_Name = dataUser.Middle_Name;
-                users.Last_Name = dataUser.Last_Name;
-                users.Mobile = dataUser.Mobile;
-                users.Email = dataUser.Email;
-                users.Password_Hash = dataUser.Password_Hash;
-                users.Intro = dataUser.Intro;
-                users.Profile = dataUser.Profile;
-                this.usersRepository.save(users)
-                return {
-                    "sucess": "ok",
-                }
             }
-
+            const passwordHash = await this.AuthService.hashPassword(dataUser.passwordHash);
+            users.firstName = dataUser.firstName;
+            users.middleName = dataUser.middleName;
+            users.lastName = dataUser.lastName;
+            users.mobile = dataUser.mobile;
+            users.email = dataUser.email;
+            users.passwordHash = passwordHash;
+            users.intro = dataUser.intro;
+            users.profile = dataUser.profile;
+            this.usersRepository.save(users)
+            return {
+                "sucess": "ok",
+            }
         } catch (error) {
             console.log(error);
         }
@@ -80,8 +79,10 @@ export class UsersService {
 
         if (user) {
             return user;
-        } else {
-            return [];
         }
+        return {
+            "error": "User not found",
+        }
+
     }
 }

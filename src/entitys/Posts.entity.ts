@@ -8,59 +8,59 @@ export class Posts {
     id: number;
 
     @Column({ nullable: false })
-    Author_Id: number;
+    authorId: number;
 
     @Column({ default: null })
-    Parent_Id: number;
+    parentId: number;
 
     @Column({ nullable: false, type: 'varchar', length: 255 })
-    Title: string;
+    title: string;
 
     @Column({ nullable: false, type: 'varchar', length: 255 })
-    Meta_Title: string;
+    metaTitle: string;
 
     @Column({ nullable: false, type: 'varchar', length: 255 })
-    Slug: string;
+    slug: string;
 
     @Column({ nullable: false, type: 'text' })
-    Summary: string;
+    summary: string;
 
     @Column({ nullable: false })
-    Published: boolean;
+    published: boolean;
 
     @CreateDateColumn({ type: 'datetime', nullable: false })
-    Created_At: Date;
+    createdAt: Date;
 
     @UpdateDateColumn({ type: 'datetime', nullable: true })
-    Updated_At: Date;
+    updatedAt: Date;
 
     @Column({ type: 'datetime', nullable: true })
-    Published_At: Date;
+    publishedAt: Date;
 
 
     @Column({ type: 'text', nullable: true })
-    Content: string;
+    content: string;
 
     @AfterInsert()
     setPublishedAt() {
-        if (this.Published) {
-            this.Published_At = new Date();
+        if (this.published) {
+            this.publishedAt = new Date();
         } else {
-            this.Published_At = null;
+            this.publishedAt = null;
         }
     }
 
     @BeforeUpdate()
     updatePublishedAt() {
-        if (this.Published == true) {
-            this.Published_At = new Date();
+        if (this.published == true) {
+            this.publishedAt = new Date();
         }
-        if (this.Published == false) {
-            this.Published_At = null;
+        if (this.published == false) {
+            this.publishedAt = null;
         }
-        this.Updated_At = new Date();
+        this.publishedAt = new Date();
     }
     @ManyToOne(() => Users, user => user.post)
-    @JoinColumn({ name: 'Author_Id' })
+    @JoinColumn({ name: 'authorId' })
     user: Users;
 }
