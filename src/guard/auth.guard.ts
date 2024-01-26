@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
             request['user'] = payload;
             const user = await this.usersService.findRolesByUserId(payload.sub);
             console.log(user['role'].id);
-            if (user['role'].nameRole == "user") {
+            if (user['role'].nameRole == "admin") {
                 return true;
             } else {
                 throw new UnauthorizedException("role no admin");
