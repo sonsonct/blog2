@@ -25,11 +25,7 @@ export class RegisterDTO extends LoginDTO {
     @MaxLength(10)
     mobile: string;
 
-    @IsDate()
-    registeredAt: Date;
-
-    @IsDate()
-    lastLogin: string;
+    roleId: number;
 
     @IsString()
     intro: string;

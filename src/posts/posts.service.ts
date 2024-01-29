@@ -101,19 +101,18 @@ export class PostsService {
         try {
             const dataPostSearch = dataSearch["dataSearch"];
 
-            //const data = await this.postRepository.find({ where: [{ title: ILike(`%${dataPostSearch}%`) }, { content: ILike(`%${dataPostSearch}%`) }] });
-
-            const data = await this.postRepository.createQueryBuilder()
+            const data = await this.postRepository
+                .createQueryBuilder()
                 .select()
-                .where('title LIKE  :dataPostSearch', { dataPostSearch: `%${dataPostSearch}%` })
-                .orWhere('content LIKE  :dataPostSearch', { dataPostSearch: `%${dataPostSearch}%` })
+                .where('MATCH(title, content) AGAINST(:dataPostSearch IN NATURAL LANGUAGE MODE)', {
+                    dataPostSearch,
+                })
                 .getMany();
-            if (data == null || data.length <= 0) {
+            if (data.length <= 0) {
                 return {
-                    "error": "post not found",
+                    "message": "post not found",
                 }
             }
-            //console.log(data.length);
             return data;
         } catch (error) {
             console.log(error);

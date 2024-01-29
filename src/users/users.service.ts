@@ -57,6 +57,7 @@ export class UsersService {
     async updateUser(id: number, dataUser: RegisterDTO) {
         try {
             const users = await this.usersRepository.findOneBy({ id });
+            //console.log(users);
             if (users == null) {
                 return {
                     "error": "User not found",
@@ -71,6 +72,7 @@ export class UsersService {
             users.passwordHash = passwordHash;
             users.intro = dataUser.intro;
             users.profile = dataUser.profile;
+            users.roleId = dataUser.roleId;
             this.usersRepository.save(users)
             return {
                 "sucess": "ok",
