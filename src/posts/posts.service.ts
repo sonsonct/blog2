@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Posts } from 'src/entitys/Posts.entity';
 import { PostDTO } from 'src/models/posts.dto';
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PostsService {
@@ -21,9 +21,9 @@ export class PostsService {
     }
     async createPost(postData: PostDTO) {
         try {
-            const post = this.postRepository.create(postData);
-            await this.postRepository.save(post);
-            return post;
+
+            return await this.postRepository.create(postData);
+
         } catch (error) {
             console.log(error);
         }
@@ -32,7 +32,6 @@ export class PostsService {
 
 
     async updatePost(id: number, postData: PostDTO) {
-        //console.log(id);
         try {
             const post = await this.postRepository.findOneBy({ id });
             if (post == null) {
@@ -46,10 +45,8 @@ export class PostsService {
             post.summary = postData.summary;
             post.published = postData.published;
             post.content = postData.content;
-            this.postRepository.save(post);
-            return {
-                "success": "updated successfully",
-            };
+
+            return await this.postRepository.save(post);
         } catch (error) {
             console.log(error);
         }
@@ -57,7 +54,6 @@ export class PostsService {
     }
 
     async deletePost(id: number) {
-        //console.log(id);
         try {
             const post = await this.postRepository.findOneBy({ id });
             if (post == null) {
@@ -65,10 +61,7 @@ export class PostsService {
                     "error": "post not found",
                 }
             }
-            this.postRepository.remove(post);
-            return {
-                "success": "delete successfully",
-            };
+            return await this.postRepository.remove(post);
         } catch (error) {
             console.log(error);
         }
@@ -77,18 +70,11 @@ export class PostsService {
 
 
     async findUserByPostId(id: number) {
-        //console.log(id);
         try {
-            const data = await this.postRepository.createQueryBuilder('post')
+            return await this.postRepository.createQueryBuilder('post')
                 .leftJoinAndSelect('post.user', 'user')
                 .where('post.id = :id', { id })
                 .getOne();
-            if (data == null) {
-                return {
-                    "error": "post not found",
-                }
-            }
-            return data;
         } catch (error) {
             console.log(error);
         }
@@ -97,23 +83,16 @@ export class PostsService {
 
 
     async findPostsByTitle(dataSearch: string) {
-        //console.log(dataSearch["title"]);
         try {
             const dataPostSearch = dataSearch["dataSearch"];
 
-            const data = await this.postRepository
+            return await this.postRepository
                 .createQueryBuilder()
                 .select()
                 .where('MATCH(title, content) AGAINST(:dataPostSearch IN NATURAL LANGUAGE MODE)', {
                     dataPostSearch,
                 })
                 .getMany();
-            if (data.length <= 0) {
-                return {
-                    "message": "post not found",
-                }
-            }
-            return data;
         } catch (error) {
             console.log(error);
         }

@@ -14,7 +14,7 @@ export class AuthService {
         private jwtService: JwtService
     ) { }
     async findAll(): Promise<Users[]> {
-        return this.usersRepository.find();
+        return await this.usersRepository.find();
     }
 
     async login({ email, passwordHash }: LoginDTO) {
@@ -23,7 +23,6 @@ export class AuthService {
             if (user == null) {
                 throw new UnauthorizedException('user not found');
             }
-            // console.log(Password_Hash);
             const check = await this.comparePassword(passwordHash, user.passwordHash);
             if (check == false) {
                 throw new UnauthorizedException('login failed');
@@ -45,8 +44,7 @@ export class AuthService {
             const hashedPassword = await this.hashPassword(credentials.passwordHash);
             const user = this.usersRepository.create(credentials);
             user.passwordHash = hashedPassword;
-            await this.usersRepository.save(user);
-            return user;
+            return await this.usersRepository.save(user);
         } catch (err) {
             console.log(err);
             throw new UnauthorizedException(err);
@@ -61,15 +59,12 @@ export class AuthService {
     }
     async verifyToken(token: any) {
         try {
-            //console.log("aucontroll:", token.token);
-            //console.log(jwtConstants.secret);
             const payload = await this.jwtService.verifyAsync(
                 token.token,
                 {
                     secret: jwtConstants.secret
                 }
             );
-            console.log(payload);
             return payload;
         } catch (error) {
             console.log(error);
