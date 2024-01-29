@@ -7,7 +7,6 @@ export class RolesController {
         private RolesService: RolesService,
 
     ) { }
-
     @Get('/all')
     getAllRole() {
         return this.RolesService.getAllRoles();

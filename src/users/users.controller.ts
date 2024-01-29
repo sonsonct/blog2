@@ -9,7 +9,6 @@ export class UsersController {
     hello() {
         return 'Hello';
     }
-
     @Get("all")
     getAll() {
         return this.UsersService.getAllUsers();
@@ -26,11 +25,8 @@ export class UsersController {
     updateUser(@Param('id') id: number, @Body(ValidationPipe) dataUser: RegisterDTO) {
         return this.UsersService.updateUser(id, dataUser);
     }
-
     @Get("/getrole/:id")
     getRole(@Param('id') id: number) {
         return this.UsersService.findRolesByUserId(id);
     }
-
-
 }

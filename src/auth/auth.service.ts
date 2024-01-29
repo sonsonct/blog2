@@ -16,7 +16,6 @@ export class AuthService {
     async findAll(): Promise<Users[]> {
         return await this.usersRepository.find();
     }
-
     async login({ email, passwordHash }: LoginDTO) {
         try {
             const user = await this.usersRepository.findOne({ where: { email } });
@@ -28,7 +27,6 @@ export class AuthService {
                 throw new UnauthorizedException('login failed');
 
             }
-
             const payload = { sub: user.id };
             return {
                 access_token: await this.jwtService.signAsync(payload),
@@ -38,7 +36,6 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
         }
     }
-
     async register(credentials: LoginDTO) {
         try {
             const hashedPassword = await this.hashPassword(credentials.passwordHash);
@@ -50,7 +47,6 @@ export class AuthService {
             throw new UnauthorizedException(err);
         }
     }
-
     async hashPassword(password: string) {
         return bcrypt.hash(password, 10);
     }

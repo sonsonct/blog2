@@ -37,14 +37,10 @@ export class UsersService {
                 }
             }
             return await this.usersRepository.remove(users);
-
-
         } catch (error) {
             console.log(error);
         }
-
     }
-
     async updateUser(id: number, dataUser: RegisterDTO) {
         try {
             const users = await this.usersRepository.findOneBy({ id });
@@ -70,7 +66,6 @@ export class UsersService {
         }
 
     }
-
     async findRolesByUserId(id: number) {
         try {
             return await this.usersRepository.createQueryBuilder('user')
@@ -81,7 +76,5 @@ export class UsersService {
         } catch (error) {
             console.log(error);
         }
-
-
     }
 }

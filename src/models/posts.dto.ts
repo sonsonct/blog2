@@ -7,6 +7,9 @@ export class PostDTO {
     @IsNumber()
     parentId: number;
 
+    @IsNumber()
+    categoryId: number;
+
     @IsString()
     title: string;
 

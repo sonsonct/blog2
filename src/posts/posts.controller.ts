@@ -8,7 +8,6 @@ export class PostsController {
     constructor(
         private postsService: PostsService,
     ) { }
-
     @UseGuards(AuthGuard)
     @Post("/create")
     createPost(@Body() postData: PostDTO) {
@@ -24,13 +23,10 @@ export class PostsController {
     deletePost(@Param('id') id: number) {
         return this.postsService.deletePost(id);
     }
-
     @Get("/all")
     getAllPost() {
         return this.postsService.getAll();
     }
-
-
     @Get("/:id")
     getAuthor(@Param("id") id: number) {
         return this.postsService.findUserByPostId(id);
