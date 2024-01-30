@@ -1,8 +1,9 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BeforeUpdate, ManyToOne, JoinColumn, AfterInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BeforeUpdate, ManyToOne, JoinColumn, AfterInsert, Index } from 'typeorm';
 import { Users } from './users.entity';
 
 @Entity('posts')
+@Index('idx_title_content_fulltext', ['title', 'content'], { fulltext: true })
 export class Posts {
     @PrimaryGeneratedColumn()
     id: number;

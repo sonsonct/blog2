@@ -12,71 +12,91 @@ export class PostsService {
     ) { }
 
     async getAll() {
-        return await this.postRepository.find();
+        try {
+            return await this.postRepository.find();
+        } catch (error) {
+            console.log(error);
+        }
+
     }
     async createPost(postData: PostDTO) {
-        const post = this.postRepository.create(postData);
-        await this.postRepository.save(post);
-        return post;
+        try {
+
+            return await this.postRepository.create(postData);
+
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
 
     async updatePost(id: number, postData: PostDTO) {
-        //console.log(id);
-        const post = await this.postRepository.findOneBy({ id });
-        if (post == null) {
-            return {
-                "error": "post not found",
+        try {
+            const post = await this.postRepository.findOneBy({ id });
+            if (post == null) {
+                return {
+                    "error": "post not found",
+                }
             }
+            post.title = postData.title;
+            post.metaTitle = postData.metaTitle;
+            post.slug = postData.slug;
+            post.summary = postData.summary;
+            post.published = postData.published;
+            post.content = postData.content;
+
+            return await this.postRepository.save(post);
+        } catch (error) {
+            console.log(error);
         }
-        post.title = postData.title;
-        post.metaTitle = postData.metaTitle;
-        post.slug = postData.slug;
-        post.summary = postData.summary;
-        post.published = postData.published;
-        post.content = postData.content;
-        this.postRepository.save(post);
-        return {
-            "success": "updated successfully",
-        };
+
     }
 
     async deletePost(id: number) {
-        //console.log(id);
-        const post = await this.postRepository.findOneBy({ id });
-        if (post == null) {
-            return {
-                "error": "post not found",
+        try {
+            const post = await this.postRepository.findOneBy({ id });
+            if (post == null) {
+                return {
+                    "error": "post not found",
+                }
             }
+            return await this.postRepository.remove(post);
+        } catch (error) {
+            console.log(error);
         }
-        this.postRepository.remove(post);
-        return {
-            "success": "delete successfully",
-        };
+
     }
 
 
     async findUserByPostId(id: number) {
-        //console.log(id);
-        const data = await this.postRepository.createQueryBuilder('post')
-            .leftJoinAndSelect('post.user', 'user')
-            .where('post.id = :id', { id })
-            .getOne();
-        if (data == null) {
-            return {
-                "error": "post not found",
-            }
+        try {
+            return await this.postRepository.createQueryBuilder('post')
+                .leftJoinAndSelect('post.user', 'user')
+                .where('post.id = :id', { id })
+                .getOne();
+        } catch (error) {
+            console.log(error);
         }
-        return data;
+
     }
 
 
-    // async sharePost(author_id : number, content: string, Parent_Id: number) {
-    //     //console.log(id);
+    async findPostsByTitle(dataSearch: string) {
+        try {
+            const dataPostSearch = dataSearch["dataSearch"];
 
-    //     const post = this.postRepository.create();
+            return await this.postRepository
+                .createQueryBuilder()
+                .select()
+                .where('MATCH(title, content) AGAINST(:dataPostSearch IN NATURAL LANGUAGE MODE)', {
+                    dataPostSearch,
+                })
+                .getMany();
+        } catch (error) {
+            console.log(error);
+        }
 
+    }
 
-
-    // }
 }
