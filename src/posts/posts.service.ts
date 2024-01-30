@@ -10,7 +10,6 @@ export class PostsService {
         @InjectRepository(Posts)
         private postRepository: Repository<Posts>
     ) { }
-
     async getAll() {
         try {
             return await this.postRepository.find();
@@ -22,15 +21,13 @@ export class PostsService {
     async createPost(postData: PostDTO) {
         try {
 
-            return await this.postRepository.create(postData);
+            return await this.postRepository.save(postData);
 
         } catch (error) {
             console.log(error);
         }
 
     }
-
-
     async updatePost(id: number, postData: PostDTO) {
         try {
             const post = await this.postRepository.findOneBy({ id });
@@ -45,14 +42,13 @@ export class PostsService {
             post.summary = postData.summary;
             post.published = postData.published;
             post.content = postData.content;
-
+            post.categoryId = postData.categoryId;
             return await this.postRepository.save(post);
         } catch (error) {
             console.log(error);
         }
 
     }
-
     async deletePost(id: number) {
         try {
             const post = await this.postRepository.findOneBy({ id });
@@ -67,8 +63,6 @@ export class PostsService {
         }
 
     }
-
-
     async findUserByPostId(id: number) {
         try {
             return await this.postRepository.createQueryBuilder('post')
@@ -80,12 +74,9 @@ export class PostsService {
         }
 
     }
-
-
     async findPostsByTitle(dataSearch: string) {
         try {
             const dataPostSearch = dataSearch["dataSearch"];
-
             return await this.postRepository
                 .createQueryBuilder()
                 .select()

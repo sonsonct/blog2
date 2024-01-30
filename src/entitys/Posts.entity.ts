@@ -1,6 +1,7 @@
 
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BeforeUpdate, ManyToOne, JoinColumn, AfterInsert, Index } from 'typeorm';
 import { Users } from './users.entity';
+import { Category } from './Category.entity';
 
 @Entity('posts')
 @Index('idx_title_content_fulltext', ['title', 'content'], { fulltext: true })
@@ -10,6 +11,9 @@ export class Posts {
 
     @Column({ nullable: false })
     authorId: number;
+
+    @Column({ nullable: true })
+    categoryId: number;
 
     @Column({ default: null })
     parentId: number;
@@ -61,7 +65,12 @@ export class Posts {
         }
         this.publishedAt = new Date();
     }
+
     @ManyToOne(() => Users, user => user.post)
     @JoinColumn({ name: 'authorId' })
     user: Users;
+
+    @ManyToOne(() => Category, category => category.post)
+    @JoinColumn({ name: 'categoryId' })
+    category: Category;
 }

@@ -11,6 +11,5 @@ import { AuthService } from 'src/auth/auth.service';
   imports: [TypeOrmModule.forFeature([Posts]), TypeOrmModule.forFeature([Users])],
   controllers: [PostsController],
   providers: [PostsService, UsersService, AuthService]
-
 })
 export class PostsModule { }

@@ -9,7 +9,6 @@ export class RolesService {
         @InjectRepository(Roles)
         private rolesRepository: Repository<Roles>,
     ) { }
-
     async getAllRoles() {
         try {
             return await this.rolesRepository.find();
