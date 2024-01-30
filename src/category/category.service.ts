@@ -33,7 +33,6 @@ export class CategoryService {
                 }
             }
             category.categoryName = dataCategory.categoryName;
-            category.parentId = dataCategory.parentId;
             return await this.categoryRepository.save(category);
         } catch (error) {
             console.log(error);

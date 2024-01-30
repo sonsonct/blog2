@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CategoryDTO } from 'src/models/category.dto';
 
@@ -15,12 +15,17 @@ export class CategoryController {
     findAll() {
         return this.categoryService.findAll();
     }
-    @Put("/update/:id")
-    update(@Param("id") id: number, @Body() dataCategory: CategoryDTO) {
+    @Put("/update")
+    update(
+        @Query('id', new ParseIntPipe()) id: number,
+        @Body() dataCategory: CategoryDTO
+    ) {
         return this.categoryService.updateCategory(id, dataCategory);
     }
-    @Delete("/delete/:id")
-    delete(@Param("id") id: number) {
+    @Delete("/delete")
+    delete(
+        @Query('id', new ParseIntPipe()) id: number
+    ) {
         return this.categoryService.deleteCategory(id);
     }
     @Get("/findParentAndSubCategory")
