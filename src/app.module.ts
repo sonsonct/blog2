@@ -8,8 +8,10 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { LoggerMiddleware } from './middlewere/loggeer.middlewere';
 import { RolesModule } from './roles/roles.module';
-import { CategoryController } from './category/category.controller';
 import { CategoryModule } from './category/category.module';
+import { CommentsModule } from './comments/comments.module';
+import { NoticeModule } from './notice/notice.module';
+
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { CategoryModule } from './category/category.module';
     PostsModule,
     RolesModule,
     CategoryModule,
+    CommentsModule,
+    NoticeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,7 +1,8 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BeforeUpdate, ManyToOne, JoinColumn, AfterInsert, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BeforeUpdate, ManyToOne, JoinColumn, AfterInsert, Index, OneToMany } from 'typeorm';
 import { Users } from './users.entity';
 import { Category } from './Category.entity';
+import { Comments } from './Comments.entity';
 
 @Entity('posts')
 @Index('idx_title_content_fulltext', ['title', 'content'], { fulltext: true })
@@ -73,4 +74,7 @@ export class Posts {
     @ManyToOne(() => Category, category => category.post)
     @JoinColumn({ name: 'categoryId' })
     category: Category;
+
+    @OneToMany(() => Comments, (comments) => comments.posts)
+    comments: Comments[]
 }

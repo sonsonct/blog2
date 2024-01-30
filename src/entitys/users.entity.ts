@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Posts } from './Posts.entity';
 import { Roles } from './Roles.entity';
+import { Comments } from './Comments.entity';
+import { Notice } from './Notice.entity';
 
 @Entity('users')
 export class Users {
@@ -46,4 +48,10 @@ export class Users {
     @ManyToOne(() => Roles, role => role.user)
     @JoinColumn({ name: 'roleId' })
     role: Roles;
+
+    @OneToMany(() => Comments, (comments) => comments.users)
+    comments: Comments[]
+
+    @OneToMany(() => Notice, (notice) => notice.user)
+    notice: Notice[]
 }

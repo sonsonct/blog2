@@ -1,3 +1,4 @@
+import { CommentsService } from '../comments/comments.service';
 import { UsersService } from '../users/users.service';
 import {
     CanActivate,
@@ -10,13 +11,15 @@ import { jwtConstants } from '../auth/constants';
 import { Request } from 'express';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class CheckAuthorGuard implements CanActivate {
     constructor(
         private usersService: UsersService,
         private jwtService: JwtService,
+        private commentsService: CommentsService
     ) { }
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
+        const paramId = request.params.id;
         const token = this.extractTokenFromHeader(request);
         if (!token) {
             throw new UnauthorizedException();
@@ -30,14 +33,14 @@ export class AuthGuard implements CanActivate {
             );
             request['user'] = payload;
             const user = await this.usersService.findRolesByUserId(payload.sub);
-            if (user['role'].nameRole == "admin") {
+            const Comment = await this.commentsService.findById(paramId);
+            if (user.id == Comment.authorId) {
                 return true;
             } else {
-                throw new UnauthorizedException("role no admin");
-
+                throw new UnauthorizedException("you not author");
             }
         } catch {
-            throw new UnauthorizedException("not authorized");
+            throw new UnauthorizedException();
         }
 
     }
