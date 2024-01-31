@@ -11,6 +11,8 @@ import { RolesModule } from './roles/roles.module';
 import { CategoryModule } from './category/category.module';
 import { CommentsModule } from './comments/comments.module';
 import { NoticeModule } from './notice/notice.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
@@ -32,6 +34,10 @@ import { NoticeModule } from './notice/notice.module';
     CategoryModule,
     CommentsModule,
     NoticeModule,
+    CloudinaryModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

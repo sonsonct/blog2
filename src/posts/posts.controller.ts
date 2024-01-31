@@ -12,49 +12,41 @@ export class PostsController {
         private postsService: PostsService,
     ) { }
     @UseGuards(AuthGuard)
-    @UseInterceptors(FileInterceptor('media', {
-        storage: diskStorage({
-            destination: './uploads',
-            filename: (req, file, callback) => {
-                callback(null, file.originalname);
-            },
-        }),
-        limits: {
-            fileSize: 1024 * 1024 * 5,
-        },
-    }))
+    @UseInterceptors(FileInterceptor('media'))
     @Post("/create")
-    createPost(@Body() postData: PostDTO, @UploadedFile() file: Express.Multer.File) {
+    async createPost(@Body() postData: PostDTO, @UploadedFile() file: Express.Multer.File) {
         if (file != null) {
-            postData.media = file.filename;
-            return this.postsService.createPost(postData);
+            if (file.size > 1024 * 1024 * 10) {
+                return {
+                    "message": 'File size < 10MB'
+                };
+            }
+            const media = await this.postsService.uploadFileToCloudinary(file);
+            postData.media = media["url"];
+            return await this.postsService.createPost(postData);
         }
-        return this.postsService.createPost(postData);
-
+        return await this.postsService.createPost(postData);
     }
     @UseGuards(AuthGuard)
-    @UseInterceptors(FileInterceptor('media', {
-        storage: diskStorage({
-            destination: './uploads',
-            filename: (req, file, callback) => {
-                callback(null, file.originalname);
-            },
-        }),
-        limits: {
-            fileSize: 1024 * 1024 * 5,
-        },
-    }))
+    @UseInterceptors(FileInterceptor('media'))
     @Put("/update")
-    updatePost(
+    async updatePost(
         @Query('id', new ParseIntPipe()) id: number,
         @Body() postData: PostDTO,
         @UploadedFile() file: Express.Multer.File
     ) {
         if (file != null) {
-            postData.media = file.filename;
-            return this.postsService.updatePost(id, postData);
+            if (file.size > 1024 * 1024 * 10) {
+                return {
+                    "message": 'File size < 10MB'
+                };
+            }
+            const media = await this.postsService.uploadFileToCloudinary(file);
+            postData.media = media["url"];
+            return await this.postsService.updatePost(id, postData);
         }
-        return this.postsService.updatePost(id, postData);
+
+        return await this.postsService.updatePost(id, postData);
     }
     @UseGuards(AuthGuard)
     @Delete("/delete")
@@ -76,5 +68,11 @@ export class PostsController {
     @Post("/search")
     getPostsByTitle(@Body() dataSearch: string) {
         return this.postsService.findPostsByTitle(dataSearch);
+    }
+
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    uploadImage(@UploadedFile() file: Express.Multer.File) {
+        return this.postsService.uploadFileToCloudinary(file);
     }
 }
