@@ -1,5 +1,4 @@
-import { IsEmail, IsString, MinLength, MaxLength, IsDate, IsNumber } from 'class-validator';
-import { IsNull } from 'typeorm';
+import { IsEmail, IsString, MinLength, MaxLength, IsNumber } from 'class-validator';
 
 export class LoginDTO {
     @IsEmail()

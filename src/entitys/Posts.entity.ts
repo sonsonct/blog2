@@ -31,7 +31,10 @@ export class Posts {
     @Column({ nullable: false, type: 'text' })
     summary: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
+    media: string;
+
+    @Column({ nullable: false, default: true })
     published: boolean;
 
     @CreateDateColumn({ type: 'datetime', nullable: false })

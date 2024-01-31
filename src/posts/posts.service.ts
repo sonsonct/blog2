@@ -20,9 +20,8 @@ export class PostsService {
     }
     async createPost(postData: PostDTO) {
         try {
-
-            return await this.postRepository.save(postData);
-
+            const data = JSON.parse(JSON.stringify(postData));
+            return await this.postRepository.save(data);
         } catch (error) {
             console.log(error);
         }
@@ -36,13 +35,15 @@ export class PostsService {
                     "error": "post not found",
                 }
             }
-            post.title = postData.title;
-            post.metaTitle = postData.metaTitle;
-            post.slug = postData.slug;
-            post.summary = postData.summary;
-            post.published = postData.published;
-            post.content = postData.content;
-            post.categoryId = postData.categoryId;
+            const data = JSON.parse(JSON.stringify(postData));
+            post.title = data.title;
+            post.metaTitle = data.metaTitle;
+            post.slug = data.slug;
+            post.summary = data.summary;
+            post.media = data.media;
+            post.published = data.published;
+            post.content = data.content;
+            post.categoryId = data.categoryId;
             return await this.postRepository.save(post);
         } catch (error) {
             console.log(error);
