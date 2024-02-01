@@ -42,7 +42,6 @@ export class PostsService {
             post.metaTitle = data.metaTitle;
             post.slug = data.slug;
             post.summary = data.summary;
-            post.media = data.media;
             post.published = data.published;
             post.content = data.content;
             post.categoryId = data.categoryId;

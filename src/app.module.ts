@@ -13,6 +13,7 @@ import { CommentsModule } from './comments/comments.module';
 import { NoticeModule } from './notice/notice.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
+import { MediaModule } from './media/media.module';
 
 
 @Module({
@@ -38,6 +39,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

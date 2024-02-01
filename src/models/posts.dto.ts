@@ -22,9 +22,6 @@ export class PostDTO {
     @IsString()
     summary: string;
 
-    @IsString()
-    media: string;
-
     @IsBoolean()
     published: boolean;
 

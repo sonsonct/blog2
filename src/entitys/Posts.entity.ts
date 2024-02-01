@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import { Users } from './users.entity';
 import { Category } from './Category.entity';
 import { Comments } from './Comments.entity';
+import { Media } from './Media.entity';
 
 @Entity('posts')
 @Index('idx_title_content_fulltext', ['title', 'content'], { fulltext: true })
@@ -30,9 +31,6 @@ export class Posts {
 
     @Column({ nullable: false, type: 'text' })
     summary: string;
-
-    @Column({ nullable: true })
-    media: string;
 
     @Column({ nullable: false, default: true })
     published: boolean;
@@ -80,4 +78,7 @@ export class Posts {
 
     @OneToMany(() => Comments, (comments) => comments.posts)
     comments: Comments[]
+
+    @OneToMany(() => Media, (media) => media.post)
+    media: Media[]
 }
