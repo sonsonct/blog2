@@ -18,6 +18,13 @@ export class MediaService {
             console.log(error);
         }
     }
+    async findAll() {
+        try {
+            return await this.mediaRepository.find();
+        } catch (error) {
+            console.log(error);
+        }
+    }
     async deleteMediaByPostId(postId: number) {
         try {
             return await this.mediaRepository.delete({ postId: postId });

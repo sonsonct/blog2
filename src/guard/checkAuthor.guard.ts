@@ -19,11 +19,15 @@ export class CheckAuthorGuard implements CanActivate {
     ) { }
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
+
         const paramId = request.params.id;
+
         const token = this.extractTokenFromHeader(request);
+
         if (!token) {
             throw new UnauthorizedException();
         }
+
         try {
             const payload = await this.jwtService.verifyAsync(
                 token,
@@ -31,9 +35,13 @@ export class CheckAuthorGuard implements CanActivate {
                     secret: jwtConstants.secret
                 }
             );
+
             request['user'] = payload;
+
             const user = await this.usersService.findRolesByUserId(payload.sub);
+
             const Comment = await this.commentsService.findById(paramId);
+
             if (user.id == Comment.authorId) {
                 return true;
             } else {
@@ -46,6 +54,7 @@ export class CheckAuthorGuard implements CanActivate {
     }
     private extractTokenFromHeader(request: Request): string | undefined {
         const [type, token] = request.headers.authorization?.split(' ') ?? [];
+
         return type === 'Bearer' ? token : undefined;
     }
 }

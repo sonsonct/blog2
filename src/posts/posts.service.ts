@@ -4,6 +4,7 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { Posts } from 'src/entitys/Posts.entity';
 import { PostDTO } from 'src/models/posts.dto';
 import { Repository } from 'typeorm';
+import { parseJson } from './parseJson';
 
 @Injectable()
 export class PostsService {
@@ -22,7 +23,8 @@ export class PostsService {
     }
     async createPost(postData: PostDTO) {
         try {
-            const data = JSON.parse(JSON.stringify(postData));
+            const data = parseJson(postData);
+
             return await this.postRepository.save(data);
         } catch (error) {
             console.log(error);
@@ -32,12 +34,15 @@ export class PostsService {
     async updatePost(id: number, postData: PostDTO) {
         try {
             const post = await this.postRepository.findOneBy({ id });
+
             if (post == null) {
                 return {
                     "error": "post not found",
                 }
             }
-            const data = JSON.parse(JSON.stringify(postData));
+
+            const data = parseJson(postData);
+
             post.title = data.title;
             post.metaTitle = data.metaTitle;
             post.slug = data.slug;
@@ -45,6 +50,7 @@ export class PostsService {
             post.published = data.published;
             post.content = data.content;
             post.categoryId = data.categoryId;
+
             return await this.postRepository.save(post);
         } catch (error) {
             console.log(error);
@@ -54,11 +60,13 @@ export class PostsService {
     async deletePost(id: number) {
         try {
             const post = await this.postRepository.findOneBy({ id });
+
             if (post == null) {
                 return {
                     "error": "post not found",
                 }
             }
+
             return await this.postRepository.remove(post);
         } catch (error) {
             console.log(error);
@@ -79,6 +87,7 @@ export class PostsService {
     async findPostsByTitle(dataSearch: string) {
         try {
             const dataPostSearch = dataSearch["dataSearch"];
+
             return await this.postRepository
                 .createQueryBuilder()
                 .select()

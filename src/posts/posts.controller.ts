@@ -14,7 +14,9 @@ export class PostsController {
     @UseInterceptors(FilesInterceptor('media', 20))
     @Post("/create")
     async createPost(@Body() postData: PostDTO, @UploadedFiles() files: Express.Multer.File[]) {
+
         const post = await this.postsService.createPost(postData);
+
         if (files != null || files.length > 0) {
             files.forEach(async (file) => {
                 if (file.size > 1024 * 1024 * 10) {
@@ -22,14 +24,18 @@ export class PostsController {
                         "message": `File ${file.originalname} size > 10MB`
                     };
                 }
+
                 const media = await this.postsService.uploadFileToCloudinary(file);
+
                 const dataMedia = {
                     "postId": post.id,
                     "url": media["url"],
                 };
+
                 await this.mediaService.createMedia(dataMedia);
             });
         }
+
         return post;
     }
     @UseGuards(AuthGuard)
@@ -41,7 +47,9 @@ export class PostsController {
         @UploadedFiles() files: Express.Multer.File[]
     ) {
         const post = await this.postsService.updatePost(id, postData);
+
         await this.mediaService.deleteMediaByPostId(id);
+
         if (files != null || files.length > 0) {
             files.forEach(async (file) => {
                 if (file.size > 1024 * 1024 * 10) {
@@ -49,14 +57,18 @@ export class PostsController {
                         "message": `File ${file.originalname} size > 10MB`
                     };
                 }
+
                 const media = await this.postsService.uploadFileToCloudinary(file);
+
                 const dataMedia = {
                     "postId": id,
                     "url": media["url"],
                 };
+
                 await this.mediaService.createMedia(dataMedia);
             });
         }
+
         return post;
     }
     @UseGuards(AuthGuard)

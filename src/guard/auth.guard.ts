@@ -17,10 +17,13 @@ export class AuthGuard implements CanActivate {
     ) { }
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
+
         const token = this.extractTokenFromHeader(request);
+
         if (!token) {
             throw new UnauthorizedException();
         }
+
         try {
             const payload = await this.jwtService.verifyAsync(
                 token,
@@ -28,13 +31,15 @@ export class AuthGuard implements CanActivate {
                     secret: jwtConstants.secret
                 }
             );
+
             request['user'] = payload;
+
             const user = await this.usersService.findRolesByUserId(payload.sub);
+
             if (user['role'].nameRole == "admin") {
                 return true;
             } else {
                 throw new UnauthorizedException("role no admin");
-
             }
         } catch {
             throw new UnauthorizedException("not authorized");
@@ -43,6 +48,7 @@ export class AuthGuard implements CanActivate {
     }
     private extractTokenFromHeader(request: Request): string | undefined {
         const [type, token] = request.headers.authorization?.split(' ') ?? [];
+
         return type === 'Bearer' ? token : undefined;
     }
 }

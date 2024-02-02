@@ -27,12 +27,15 @@ export class CategoryService {
     async updateCategory(id: number, dataCategory: CategoryDTO) {
         try {
             const category = await this.categoryRepository.findOneBy({ id });
+
             if (category == null) {
                 return {
                     "error": "category not found"
                 }
             }
+
             category.categoryName = dataCategory.categoryName;
+
             return await this.categoryRepository.save(category);
         } catch (error) {
             console.log(error);
@@ -41,11 +44,13 @@ export class CategoryService {
     async deleteCategory(id: number) {
         try {
             const category = await this.categoryRepository.findOneBy({ id });
+
             if (category == null) {
                 return {
                     "error": "category not found"
                 }
             }
+
             return await this.categoryRepository.remove(category);
         } catch (error) {
             console.log(error);

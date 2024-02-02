@@ -37,14 +37,17 @@ export class CommentsService {
     async updateComments(id: number, commentsData: CommentsDTO) {
         try {
             const comments = await this.commentsRepository.findOneBy({ id });
+
             if (comments == null) {
                 return {
                     "error": "comments not found"
                 }
             }
+
             comments.title = commentsData.title;
             comments.published = commentsData.published;
             comments.content = commentsData.content;
+
             return await this.commentsRepository.save(comments);
 
         } catch (error) {
@@ -54,11 +57,13 @@ export class CommentsService {
     async deleteComments(id: number) {
         try {
             const comments = await this.commentsRepository.findOneBy({ id });
+
             if (comments == null) {
                 return {
                     "error": "comments not found"
                 }
             }
+
             return await this.commentsRepository.remove(comments);
 
         } catch (error) {
@@ -79,6 +84,7 @@ export class CommentsService {
     async findSearchComment(dataSearch: string) {
         try {
             const dataCommentSearch = dataSearch["dataSearch"];
+
             return await this.commentsRepository
                 .createQueryBuilder()
                 .select()

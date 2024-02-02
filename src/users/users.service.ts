@@ -31,11 +31,13 @@ export class UsersService {
     async deleteUser(id: number) {
         try {
             const users = await this.usersRepository.findOneBy({ id });
+
             if (users == null) {
                 return {
                     "error": "User not found",
                 }
             }
+
             return await this.usersRepository.remove(users);
         } catch (error) {
             console.log(error);
@@ -44,12 +46,15 @@ export class UsersService {
     async updateUser(id: number, dataUser: RegisterDTO) {
         try {
             const users = await this.usersRepository.findOneBy({ id });
+
             if (users == null) {
                 return {
                     "error": "User not found",
                 }
             }
+
             const passwordHash = await this.AuthService.hashPassword(dataUser.passwordHash);
+
             users.firstName = dataUser.firstName;
             users.middleName = dataUser.middleName;
             users.lastName = dataUser.lastName;
@@ -59,6 +64,7 @@ export class UsersService {
             users.intro = dataUser.intro;
             users.profile = dataUser.profile;
             users.roleId = dataUser.roleId;
+
             return await this.usersRepository.save(users)
 
         } catch (error) {

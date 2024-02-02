@@ -19,15 +19,20 @@ export class AuthService {
     async login({ email, passwordHash }: LoginDTO) {
         try {
             const user = await this.usersRepository.findOne({ where: { email } });
+
             if (user == null) {
                 throw new UnauthorizedException('user not found');
             }
+
             const check = await this.comparePassword(passwordHash, user.passwordHash);
+
             if (check == false) {
                 throw new UnauthorizedException('login failed');
 
             }
+
             const payload = { sub: user.id };
+
             return {
                 access_token: await this.jwtService.signAsync(payload),
             };
@@ -39,8 +44,11 @@ export class AuthService {
     async register(credentials: LoginDTO) {
         try {
             const hashedPassword = await this.hashPassword(credentials.passwordHash);
+
             const user = this.usersRepository.create(credentials);
+
             user.passwordHash = hashedPassword;
+
             return await this.usersRepository.save(user);
         } catch (err) {
             console.log(err);
@@ -61,6 +69,7 @@ export class AuthService {
                     secret: jwtConstants.secret
                 }
             );
+
             return payload;
         } catch (error) {
             console.log(error);

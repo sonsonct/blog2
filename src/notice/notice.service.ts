@@ -46,6 +46,7 @@ export class NoticeService {
     async findSearchNotice(dataSearch: string) {
         try {
             const dataNoticeSearch = dataSearch["dataSearch"];
+
             return await this.noticeRepository
                 .createQueryBuilder()
                 .select()
