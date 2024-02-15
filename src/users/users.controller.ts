@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Put, Query, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { LoginDTO, RegisterDTO } from 'src/models/users.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags("users")
 @Controller('users')
 export class UsersController {
     constructor(private UsersService: UsersService) { }
@@ -28,7 +29,7 @@ export class UsersController {
     ) {
         return this.UsersService.updateUser(id, dataUser);
     }
-    @Get("/getrole")
+    @Get("/getRole")
     getRole(
         @Query('id', new ParseIntPipe()) id: number,
     ) {

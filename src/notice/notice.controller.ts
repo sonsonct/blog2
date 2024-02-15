@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { NoticeService } from './notice.service';
-import { NoticeDTO } from 'src/models/notice.dto';
-
+import { NoticeDTO, NoticeSearchDTO } from 'src/models/notice.dto';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags("notice")
 @Controller('notice')
 export class NoticeController {
     constructor(
@@ -12,7 +13,7 @@ export class NoticeController {
         return this.noticeService.findAll();
     }
     @Post("/search")
-    searchNotice(@Body() dataSearch: string) {
+    searchNotice(@Body() dataSearch: NoticeSearchDTO) {
         return this.noticeService.findSearchNotice(dataSearch);
     }
     @Get("/page")

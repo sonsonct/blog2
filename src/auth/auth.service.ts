@@ -1,7 +1,7 @@
 import { Body, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/entitys/users.entity';
-import { LoginDTO } from 'src/models/users.dto';
+import { LoginDTO, TokenDTO } from 'src/models/users.dto';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
@@ -61,7 +61,7 @@ export class AuthService {
     async comparePassword(password: string, Password_Hash: string) {
         return bcrypt.compare(password, Password_Hash)
     }
-    async verifyToken(token: any) {
+    async verifyToken(token: TokenDTO) {
         try {
             const payload = await this.jwtService.verifyAsync(
                 token.token,

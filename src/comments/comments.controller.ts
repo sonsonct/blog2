@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { CommentsService } from './comments.service';
-import { CommentsDTO } from 'src/models/comments.dto';
+import { CommentsDTO, CommentsSearchDTO } from 'src/models/comments.dto';
 import { CheckAuthorGuard } from 'src/guard/checkAuthor.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("comments")
 @Controller('comments')
 export class CommentsController {
     constructor(
@@ -20,7 +22,7 @@ export class CommentsController {
         return this.commentsService.pagenation(page, pageSize);
     }
     @Post("/search")
-    searchComment(@Body() dataSearch: string) {
+    searchComment(@Body() dataSearch: CommentsSearchDTO) {
         return this.commentsService.findSearchComment(dataSearch);
     }
     @Post("/create")

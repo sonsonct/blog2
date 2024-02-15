@@ -20,7 +20,7 @@ export class CheckAuthorGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
 
-        const paramId = request.params.id;
+        const paramId = request.query.id;
 
         const token = this.extractTokenFromHeader(request);
 

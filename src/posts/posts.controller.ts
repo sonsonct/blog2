@@ -1,9 +1,12 @@
 import { MediaService } from './../media/media.service';
-import { PostDTO } from 'src/models/posts.dto';
+import { PostDTO, PostSearchDTO, PostSearchHashtagDTO } from 'src/models/posts.dto';
 import { PostsService } from './posts.service';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags("posts")
 @Controller('posts')
 export class PostsController {
     constructor(
@@ -17,7 +20,7 @@ export class PostsController {
 
         const post = await this.postsService.createPost(postData);
 
-        if (files != null || files.length > 0) {
+        if (files != null && files.length > 0) {
             files.forEach(async (file) => {
                 if (file.size > 1024 * 1024 * 10) {
                     return {
@@ -89,13 +92,12 @@ export class PostsController {
         return this.postsService.findUserByPostId(id);
     }
     @Post("/search")
-    getPostsByTitle(@Body() dataSearch: string) {
+    getPostsByTitle(@Body() dataSearch: PostSearchDTO) {
         return this.postsService.findPostsByTitle(dataSearch);
     }
 
-    // @Post('upload')
-    // @UseInterceptors(FileInterceptor('file'))
-    // uploadImage(@UploadedFile() file: Express.Multer.File) {
-    //     return this.postsService.uploadFileToCloudinary(file);
-    // }
+    @Post('hashtag')
+    findByHashtag(@Body() hashtagId: PostSearchHashtagDTO) {
+        return this.postsService.findPostByHashTag(hashtagId);
+    }
 }

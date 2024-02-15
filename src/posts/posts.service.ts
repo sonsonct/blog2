@@ -1,16 +1,26 @@
+import { HashtagService } from './../hashtag/hashtag.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { Posts } from 'src/entitys/Posts.entity';
-import { PostDTO } from 'src/models/posts.dto';
+import { PostDTO, PostSearchDTO, PostSearchHashtagDTO } from 'src/models/posts.dto';
 import { Repository } from 'typeorm';
 import { parseJson } from './parseJson';
+import { PostsHashtag } from 'src/entitys/PostsHashtag.entity';
+import { Hashtag } from 'src/entitys/Hashtag.entity';
 
 @Injectable()
 export class PostsService {
     constructor(
         @InjectRepository(Posts)
         private postRepository: Repository<Posts>,
+
+        @InjectRepository(PostsHashtag)
+        private postHashtagRepository: Repository<PostsHashtag>,
+
+        @InjectRepository(Hashtag)
+        private hashtagRepository: Repository<Hashtag>,
+
         private cloudinary: CloudinaryService,
     ) { }
     async getAll() {
@@ -25,7 +35,47 @@ export class PostsService {
         try {
             const data = parseJson(postData);
 
-            return await this.postRepository.save(data);
+            const post = await this.postRepository.save(data);
+
+            if (data["tag"] != null) {
+
+                const hashtags = data["tag"];
+
+                hashtags.forEach(async (hashtag) => {
+
+                    const hashtagname = hashtag["hashtagName"];
+
+                    const checkHashtag = await this.hashtagRepository.findOneBy({ hashtagName: hashtagname });
+
+                    if (checkHashtag) {
+
+                        const postHashtag = {
+                            "postsId": post.id,
+                            "hashtagId": checkHashtag.id
+                        }
+
+                        await this.postHashtagRepository.save(postHashtag);
+
+                    } else {
+
+                        const dataTag = {
+                            "hashtagName": hashtagname
+                        }
+
+                        const hashtag = await this.hashtagRepository.save(dataTag);
+
+                        const postHashtag = {
+                            "postsId": post.id,
+                            "hashtagId": hashtag.id
+                        }
+
+                        await this.postHashtagRepository.save(postHashtag);
+                    }
+                });
+            }
+
+            return post;
+
         } catch (error) {
             console.log(error);
         }
@@ -84,7 +134,7 @@ export class PostsService {
         }
 
     }
-    async findPostsByTitle(dataSearch: string) {
+    async findPostsByTitle(dataSearch: PostSearchDTO) {
         try {
             const dataPostSearch = dataSearch["dataSearch"];
 
@@ -100,9 +150,21 @@ export class PostsService {
         }
 
     }
+
     async uploadFileToCloudinary(file: Express.Multer.File) {
         return await this.cloudinary.uploadFile(file).catch(() => {
             throw new BadRequestException('Invalid file type.');
         });
+    }
+
+
+    async findPostByHashTag(hashtagId: PostSearchHashtagDTO) {
+        const id = hashtagId["hashtagId"];
+
+        return await this.postRepository.createQueryBuilder('post')
+            .leftJoinAndSelect('post.hashtag', 'hashtag')
+            .where('hashtag.id = :hashtagId', { hashtagId: id })
+            .getMany();
+
     }
 }

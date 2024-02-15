@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Notice } from 'src/entitys/Notice.entity';
-import { NoticeDTO } from 'src/models/notice.dto';
+import { NoticeDTO, NoticeSearchDTO } from 'src/models/notice.dto';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class NoticeService {
             console.log(error);
         }
     }
-    async findSearchNotice(dataSearch: string) {
+    async findSearchNotice(dataSearch: NoticeSearchDTO) {
         try {
             const dataNoticeSearch = dataSearch["dataSearch"];
 

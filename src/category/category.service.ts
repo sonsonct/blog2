@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/entitys/Category.entity';
-import { CategoryDTO } from 'src/models/category.dto';
-import { Repository } from 'typeorm';
+import { CategoryDTO, CategorySearchDTO } from 'src/models/category.dto';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
@@ -19,6 +19,14 @@ export class CategoryService {
     }
     async createCategory(dataCategory: CategoryDTO) {
         try {
+            const category = await this.categoryRepository.findOneBy({ categoryName: dataCategory.categoryName });
+
+            if (category != null) {
+                return {
+                    "message": "Category name exist"
+                }
+            }
+
             return await this.categoryRepository.save(dataCategory);
         } catch (error) {
             console.log(error);
@@ -34,6 +42,15 @@ export class CategoryService {
                 }
             }
 
+            const checkName = await this.categoryRepository.findOneBy({ categoryName: dataCategory.categoryName });
+
+            if (checkName != null) {
+                return {
+                    "message": "Category name exist"
+                }
+            }
+
+            category.parentId = dataCategory.parentId;
             category.categoryName = dataCategory.categoryName;
 
             return await this.categoryRepository.save(category);
@@ -73,6 +90,18 @@ export class CategoryService {
                 .leftJoinAndSelect('category.post', 'post')
                 .where('post.categoryId = category.id')
                 .getMany();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async findByName(categoryName: CategorySearchDTO) {
+        try {
+            return await this.categoryRepository.find({
+                where: {
+                    categoryName: Like(`%${categoryName["categoryName"]}%`),
+                }
+            })
         } catch (error) {
             console.log(error);
         }

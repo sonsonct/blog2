@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comments } from 'src/entitys/Comments.entity';
-import { CommentsDTO } from 'src/models/comments.dto';
+import { CommentsDTO, CommentsSearchDTO } from 'src/models/comments.dto';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -81,7 +81,7 @@ export class CommentsService {
             console.log(error);
         }
     }
-    async findSearchComment(dataSearch: string) {
+    async findSearchComment(dataSearch: CommentsSearchDTO) {
         try {
             const dataCommentSearch = dataSearch["dataSearch"];
 

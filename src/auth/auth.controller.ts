@@ -1,8 +1,10 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Users } from 'src/entitys/users.entity';
-import { LoginDTO } from 'src/models/users.dto';
+import { LoginDTO, RegisterDTO, TokenDTO } from 'src/models/users.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("auth")
 @Controller('auth')
 export class AuthController {
 
@@ -19,14 +21,13 @@ export class AuthController {
     }
     @HttpCode(HttpStatus.OK)
     @Post("/register")
-    register(@Body(ValidationPipe) credentials: LoginDTO) {
+    register(@Body(ValidationPipe) credentials: RegisterDTO) {
         return this.authService.register(credentials);
     }
 
-
     @HttpCode(HttpStatus.OK)
     @Post("/verify")
-    verifyToken(@Body() token: string) {
+    verifyToken(@Body(ValidationPipe) token: TokenDTO) {
         return this.authService.verifyToken(token);
     }
 }

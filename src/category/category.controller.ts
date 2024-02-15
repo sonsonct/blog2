@@ -1,14 +1,16 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, ValidationPipe } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CategoryDTO } from 'src/models/category.dto';
+import { CategoryDTO, CategorySearchDTO } from 'src/models/category.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('category')
+@ApiTags("category")
 export class CategoryController {
     constructor(
         private categoryService: CategoryService
     ) { }
     @Post("/create")
-    create(@Body() dataCategory: CategoryDTO) {
+    create(@Body(ValidationPipe) dataCategory: CategoryDTO) {
         return this.categoryService.createCategory(dataCategory);
     }
     @Get("/all")
@@ -18,7 +20,7 @@ export class CategoryController {
     @Put("/update")
     update(
         @Query('id', new ParseIntPipe()) id: number,
-        @Body() dataCategory: CategoryDTO
+        @Body(ValidationPipe) dataCategory: CategoryDTO
     ) {
         return this.categoryService.updateCategory(id, dataCategory);
     }
@@ -35,5 +37,9 @@ export class CategoryController {
     @Get("/findPost")
     findPost() {
         return this.categoryService.findPostByCategory();
+    }
+    @Post("/search")
+    findByName(@Body() categoryName: CategorySearchDTO) {
+        return this.categoryService.findByName(categoryName);
     }
 }
