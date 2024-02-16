@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "./Posts.entity";
+import { Faq } from "./Faq.entity";
 
 @Entity("category")
 export class Category {
@@ -21,4 +22,7 @@ export class Category {
 
     @OneToMany(() => Category, (category) => category.parentCategory)
     subCategories: Category[];
+
+    @OneToMany(() => Faq, (faq) => faq.category)
+    faq: Faq[]
 }

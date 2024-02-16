@@ -1,7 +1,7 @@
 import { Body, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/entitys/users.entity';
-import { LoginDTO, TokenDTO } from 'src/models/users.dto';
+import { LoginDTO, RegisterDTO, TokenDTO } from 'src/models/users.dto';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
@@ -41,8 +41,24 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
         }
     }
-    async register(credentials: LoginDTO) {
+    async register(credentials: RegisterDTO) {
         try {
+            const email = credentials.email;
+
+            const checkEmail = await this.usersRepository.findOne({ where: { email } });
+
+            if (checkEmail != null) {
+                throw new UnauthorizedException('Email already exists');
+            }
+
+            const mobile = credentials.mobile;
+
+            const checkMobile = await this.usersRepository.findOne({ where: { mobile } });
+
+            if (checkMobile != null) {
+                throw new UnauthorizedException('Mobile already exists');
+            }
+
             const hashedPassword = await this.hashPassword(credentials.passwordHash);
 
             const user = this.usersRepository.create(credentials);

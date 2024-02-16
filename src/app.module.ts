@@ -15,6 +15,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
 import { MediaModule } from './media/media.module';
 import { HashtagModule } from './hashtag/hashtag.module';
+import { FaqModule } from './faq/faq.module';
 
 
 @Module({
@@ -42,6 +43,7 @@ import { HashtagModule } from './hashtag/hashtag.module';
     }),
     MediaModule,
     HashtagModule,
+    FaqModule,
   ],
   controllers: [AppController],
   providers: [AppService],

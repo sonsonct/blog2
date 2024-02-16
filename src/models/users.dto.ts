@@ -93,7 +93,7 @@ export class RegisterDTO {
 export class TokenDTO {
     @ApiProperty({
         description: 'token',
-        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImlhdCI6MTcwNjUwMTk5NiwiZXhwIjoxNzA2NTA1NTk2fQ.J9G5T_qlF0Dibe-qIYGBvSihuMF6L53PltJSPjD_M88',
+        example: 'your token',
     })
     @IsString()
     token: string;
