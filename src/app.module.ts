@@ -2,33 +2,40 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { AuthModule } from './components/auth/auth.module';
+import { UsersModule } from './components/users/users.module';
 
-import { PostsModule } from './posts/posts.module';
-import { LoggerMiddleware } from './middlewere/loggeer.middlewere';
-import { RolesModule } from './roles/roles.module';
-import { CategoryModule } from './category/category.module';
-import { CommentsModule } from './comments/comments.module';
-import { NoticeModule } from './notice/notice.module';
+import { PostsModule } from './components/posts/posts.module';
+import { LoggerMiddleware } from './core/middlewere/loggeer.middlewere';
+import { RolesModule } from './components/roles/roles.module';
+import { CategoryModule } from './components/category/category.module';
+import { CommentsModule } from './components/comments/comments.module';
+import { NoticeModule } from './components/notice/notice.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
-import { MediaModule } from './media/media.module';
-import { HashtagModule } from './hashtag/hashtag.module';
-import { FaqModule } from './faq/faq.module';
+import { MediaModule } from './components/media/media.module';
+import { HashtagModule } from './components/hashtag/hashtag.module';
+import { FaqModule } from './components/faq/faq.module';
 
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '123456',
-      database: 'blog',
-      entities: ['dist/**/*/*.entity.js'],
-      synchronize: true,
+    ConfigModule.forRoot({
+      cache: true,
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        type: 'mysql',
+        host: process.env.DATABASE_HOST,
+        port: +process.env.DATABASE_PORT,
+        username: process.env.DATABASE_USERNAME,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME,
+        entities: ['dist/**/*/*.entity.js'],
+        synchronize: true,
+      }),
     }),
     AuthModule,
     UsersModule,
@@ -38,9 +45,6 @@ import { FaqModule } from './faq/faq.module';
     CommentsModule,
     NoticeModule,
     CloudinaryModule,
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-    }),
     MediaModule,
     HashtagModule,
     FaqModule,
