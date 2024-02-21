@@ -8,6 +8,10 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { LoggerMiddleware } from './middlewere/loggeer.middlewere';
 import { RolesModule } from './roles/roles.module';
+import { CategoryModule } from './category/category.module';
+import { CommentsModule } from './comments/comments.module';
+import { NoticeModule } from './notice/notice.module';
+
 
 @Module({
   imports: [
@@ -25,6 +29,9 @@ import { RolesModule } from './roles/roles.module';
     UsersModule,
     PostsModule,
     RolesModule,
+    CategoryModule,
+    CommentsModule,
+    NoticeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
